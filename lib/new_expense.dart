@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_expense_tracker_app/enum.dart';
 import 'package:flutter_expense_tracker_app/helper.dart';
+import 'package:flutter_expense_tracker_app/models/expense.dart';
 import 'package:intl/intl.dart';
 
 final formatter = DateFormat.yMd();
@@ -8,12 +9,7 @@ final formatter = DateFormat.yMd();
 class NewExpense extends StatefulWidget {
   const NewExpense({super.key, required this.addExpense});
 
-  final void Function({
-    required String title,
-    required double amount,
-    required DateTime date,
-    required Category category,
-  }) addExpense;
+  final void Function(Expense expense) addExpense;
 
   @override
   State<NewExpense> createState() => _NewExpenseState();
@@ -69,10 +65,12 @@ class _NewExpenseState extends State<NewExpense> {
     }
 
     widget.addExpense(
-      title: title,
-      amount: amount,
-      date: _selectedDate!,
-      category: _selectedCategory,
+      Expense(
+        title: title,
+        amount: amount,
+        date: _selectedDate!,
+        category: _selectedCategory,
+      ),
     );
 
     Navigator.pop(context);
@@ -90,7 +88,7 @@ class _NewExpenseState extends State<NewExpense> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 48),
       child: Column(
         spacing: 48,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -158,7 +156,7 @@ class _NewExpenseState extends State<NewExpense> {
                 onPressed: _closeOverlay,
                 child: const Text('Cancel'),
               ),
-              ElevatedButton(
+              FilledButton(
                 onPressed: _submitExpense,
                 child: const Text('Add Expense'),
               ),
