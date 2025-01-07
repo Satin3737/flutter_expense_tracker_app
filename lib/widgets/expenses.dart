@@ -59,12 +59,15 @@ class _ExpensesState extends State<Expenses> {
         ],
         title: const Text('Expense Tracker'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: content,
-          ),
-        ],
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          children: [
+            Expanded(
+              child: content,
+            ),
+          ],
+        ),
       ),
     );
   }
