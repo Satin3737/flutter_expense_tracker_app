@@ -30,3 +30,23 @@ class Expense {
   IconData get iconData => categoryIcons[category]!;
   String get formatedDate => dateFormatter.format(date);
 }
+
+class ExpenseBucket {
+  const ExpenseBucket({required this.expenses, required this.category});
+
+  ExpenseBucket.forCategory(List<Expense> expenses, this.category)
+      : expenses =
+            expenses.where((expense) => expense.category == category).toList();
+
+  final Category category;
+  final List<Expense> expenses;
+
+  get totalExpenses =>
+      expenses.fold<double>(0, (sum, expense) => sum + expense.amount);
+//
+// static ExpenseBucket forCategory(List<Expense> expenses, Category category) {
+//   return expenses
+//       .where((expense) => expense.category == category)
+//       .fold<double>(0, (prev, element) => prev + element.amount);
+// }
+}
