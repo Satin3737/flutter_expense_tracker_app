@@ -87,83 +87,124 @@ class _NewExpenseState extends State<NewExpense> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 48),
-      child: Column(
-        spacing: 48,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Column(
-            spacing: 16,
+    final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
+
+    return LayoutBuilder(builder: (context, constraints) {
+      final width = constraints.maxWidth;
+
+      return SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.fromLTRB(16, 24, 16, keyboardSpace + 24),
+          child: Column(
+            spacing: 48,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextField(
-                controller: _titleController,
-                maxLength: 50,
-                decoration: const InputDecoration(labelText: 'Title'),
-              ),
-              TextField(
-                controller: _amountController,
-                decoration: const InputDecoration(
-                  labelText: 'Amount',
-                  prefixText: '\$ ',
-                ),
-                keyboardType: TextInputType.number,
-              ),
-              Row(
+              Column(
+                spacing: 16,
                 children: [
-                  Expanded(
-                    child: DropdownButton(
-                      borderRadius: BorderRadius.circular(8),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      value: _selectedCategory,
-                      items: Category.values
-                          .map(
-                            (category) => DropdownMenuItem(
-                              value: category,
-                              child: Text(capitalizeFirstLetter(category.name)),
+                  if (width > 600)
+                    Row(
+                      spacing: 24,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _titleController,
+                            maxLength: 50,
+                            decoration:
+                                const InputDecoration(labelText: 'Title'),
+                          ),
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: _amountController,
+                            decoration: const InputDecoration(
+                              labelText: 'Amount',
+                              prefixText: '\$ ',
                             ),
-                          )
-                          .toList(),
-                      onChanged: _selectCategory,
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                      ],
+                    )
+                  else
+                    Column(
+                      spacing: 16,
+                      children: [
+                        TextField(
+                          controller: _titleController,
+                          maxLength: 50,
+                          decoration: const InputDecoration(labelText: 'Title'),
+                        ),
+                        TextField(
+                          controller: _amountController,
+                          decoration: const InputDecoration(
+                            labelText: 'Amount',
+                            prefixText: '\$ ',
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                      ],
                     ),
-                  ),
-                  Expanded(
-                    child: TextButton.icon(
-                      onPressed: _presentDatePicker,
-                      style: TextButton.styleFrom(
-                        textStyle: const TextStyle(fontSize: 16),
+                  Row(
+                    spacing: 24,
+                    children: [
+                      Expanded(
+                        child: DropdownButton(
+                          borderRadius: BorderRadius.circular(8),
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          value: _selectedCategory,
+                          items: Category.values
+                              .map(
+                                (category) => DropdownMenuItem(
+                                  value: category,
+                                  child: Text(
+                                      capitalizeFirstLetter(category.name)),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: _selectCategory,
+                        ),
                       ),
-                      icon: const Icon(
-                        Icons.calendar_month,
-                        size: 24,
+                      Expanded(
+                        child: TextButton.icon(
+                          onPressed: _presentDatePicker,
+                          style: TextButton.styleFrom(
+                            textStyle: const TextStyle(fontSize: 16),
+                          ),
+                          icon: const Icon(
+                            Icons.calendar_month,
+                            size: 24,
+                          ),
+                          label: Text(
+                            _selectedDate == null
+                                ? 'No Date Chosen'
+                                : formatter.format(_selectedDate!),
+                          ),
+                        ),
                       ),
-                      label: Text(
-                        _selectedDate == null
-                            ? 'No Date Chosen'
-                            : formatter.format(_selectedDate!),
-                      ),
-                    ),
+                    ],
                   ),
                 ],
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextButton(
+                    onPressed: _closeOverlay,
+                    child: const Text('Cancel'),
+                  ),
+                  FilledButton(
+                    onPressed: _submitExpense,
+                    child: const Text('Add Expense'),
+                  ),
+                ],
+              )
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TextButton(
-                onPressed: _closeOverlay,
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                onPressed: _submitExpense,
-                child: const Text('Add Expense'),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }

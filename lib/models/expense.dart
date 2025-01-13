@@ -41,12 +41,7 @@ class ExpenseBucket {
   final Category category;
   final List<Expense> expenses;
 
-  get totalExpenses =>
-      expenses.fold<double>(0, (sum, expense) => sum + expense.amount);
-//
-// static ExpenseBucket forCategory(List<Expense> expenses, Category category) {
-//   return expenses
-//       .where((expense) => expense.category == category)
-//       .fold<double>(0, (prev, element) => prev + element.amount);
-// }
+  get totalExpenses {
+    return expenses.fold<double>(0, (sum, expense) => sum + expense.amount);
+  }
 }
